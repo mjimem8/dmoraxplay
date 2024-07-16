@@ -1,0 +1,128 @@
+<div class="header">
+  <!-- Logo o título de la aplicación -->
+  <div class="logo">
+    <img src="assets/icon.jpeg" alt="Logo">
+    <h1>Aplicación de Administración de Jugadores</h1>
+  </div>
+
+  <!-- Formulario para acceso como administrador -->
+  <div class="admin-login" *ngIf="!isAdmin()">
+    <input type="text" pInputText placeholder="Nombre de Administrador" [(ngModel)]="admin">
+    <button pButton type="button" (click)="passAdmin()" label="Acceder"></button>
+  </div>
+
+  <!-- Mensaje de bienvenida y botón para cerrar sesión -->
+  <div class="admin-welcome" *ngIf="isAdmin()">
+    <span>Bienvenido, Dmoraxplay!</span>
+    <button pButton type="button" (click)="cerrarSesion()" label="Cerrar sesión"></button>
+  </div>
+</div>
+
+<div class="body">
+  <div class="avatar p-d-flex p-ai-center p-flex-column">
+    <img src="assets/icon.jpeg" alt="Avatar" class="rounded" style="width: 100px; height: 100px; border-radius: 50%;">
+    <div class="social-media p-mt-3">
+      <p class="p-text-center">¡Sígueme!</p>
+      <div class="p-d-flex p-jc-center p-ai-center">
+        <a href="https://www.instagram.com/dmoraxplay" target="_blank" class="p-mr-2">
+          <i class="pi pi-instagram" style="font-size: 2em;"></i>
+        </a>
+        <a href="https://www.tiktok.com/@dmoraxplay" target="_blank" class="p-mr-2">
+          <i class="pi pi-tiktok" style="font-size: 2em;"></i>
+        </a>
+        <a href="https://www.youtube.com/@dmoraxplay" target="_blank" class="p-mr-2">
+          <i class="pi pi-youtube" style="font-size: 2em;"></i>
+        </a>
+        <a href="https://www.twitch.tv/dmoraxplay" target="_blank">
+          <i class="pi pi-twitch" style="font-size: 2em;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="grid width-100">
+    <div class="col-12" [ngClass]="{'md:col-8': puedeAnadirAPendientes(), 'md:col-12': !puedeAnadirAPendientes()}">
+      <div class="table-container">
+        <h2>Pendientes de jugar</h2>
+        <p-table [value]="pendientesPorJugar">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Orden</th>
+              <th>Tik Tok</th>
+              <th>Twitch</th>
+              <th>Instagram</th>
+              <th>YouTube</th>
+              <th>Acciones</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-pendientes let-rowIndex="rowIndex">
+            <tr>
+              <td>{{ rowIndex + 1 }}</td>
+              <td>{{ pendientes.tiktok }}</td>
+              <td>{{ pendientes.twitch }}</td>
+              <td>{{ pendientes.instagram }}</td>
+              <td>{{ pendientes.youtube }}</td>
+              <td *ngIf="puedeModificarAcciones(pendientes.ip)">
+                <button pButton type="button" (click)="setModeEdition(pendientes)">Editar</button>
+                <button pButton type="button" class="p-button-danger" (click)="eliminarPendiente(pendientes)">Eliminar</button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        
+      </div>
+    </div>
+    <div class="col-12 md:col-4">
+      <form #formulario="ngForm" (ngSubmit)="submitForm()" *ngIf="puedeAnadirAPendientes()">
+        <div class="p-field">
+          <label for="tiktok">Tiktok</label>
+          <input type="tiktok" id="tiktok" name="tiktok" pInputText [(ngModel)]="usuarioPendiente.tiktok">
+        </div>
+        
+        <div class="p-field">
+          <label for="twitch">Twitch</label>
+          <input type="twitch" id="twitch" name="twitch" pInputText [(ngModel)]="usuarioPendiente.twitch">
+        </div>
+        
+        <div class="p-field">
+          <label for="instagram">Instagram</label>
+          <input type="tel" id="instagram" name="instagram" pInputText [(ngModel)]="usuarioPendiente.instagram">
+        </div>
+        
+        <div class="p-field">
+          <label for="youtube">YouTube</label>
+          <input id="youtube" name="youtube" pInputText [(ngModel)]="usuarioPendiente.youtube">
+        </div>
+        
+        <button type="submit" pButton>Registrar</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-container" *ngIf="isAdmin()">
+    <h2>Histórico</h2>
+    <button pButton type="button" (click)="resetHistorico()">Resetear Histórico</button>
+
+    <p-table [value]="historico">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Tik Tok</th>
+          <th>Twitch</th>
+          <th>Instagram</th>
+          <th>YouTube</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-historico>
+        <tr>
+          <td>{{ historico.tiktok }}</td>
+          <td>{{ historico.twitch }}</td>
+          <td>{{ historico.instagram }}</td>
+          <td>{{ historico.youtube }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+
+</div>
